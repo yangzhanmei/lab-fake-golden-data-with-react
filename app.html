@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>form tools</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+
+    <style type="text/css">
+        .right {
+            margin-left: 900px;
+        }
+
+        #center {
+            margin-top: 50px;
+        }
+
+        .input-group {
+            margin-top: 5px;
+            margin-left: 0px;
+        }
+        .show{
+            margin-left: 570px;
+        }
+    </style>
+</head>
+<body>
+<div id="nohappy"></div>
+<script src="./build/react.js"></script>
+<script src="./build/react-dom.js"></script>
+<script src="./build/browser.min.js"></script>
+<script src="./build/ReactRouter.min.js"></script>
+<script type="text/babel">
+    const Item = React.createClass({
+        handelDelete(){
+            this.props.deleted(this.props.index);
+        },
+        render(){
+            if (this.props.text === 'text') {
+                return (
+                        <div className="input-group input-group-xs">
+                            <div className="col-lg-9">
+                                <input type="text" className="form-control"/>
+                            </div>
+                            <div className="btn-group" role="group">
+                                <button type="button" className="btn btn-danger btn-sm"
+                                        onClick={this.handelDelete}>X
+                                </button>
+                            </div>
+                        </div>
+                )
+            } else {
+                return (
+                        <div className="input-group input-group-xs">
+                            <div className="col-lg-10">
+                                <input type="date" className="form-control"/>
+                            </div>
+                            <div className="btn-group" role="group">
+                                <button type="button" className="btn btn-danger btn-sm"
+                                        onClick={this.handelDelete}>X
+                                </button>
+                            </div>
+                        </div>)
+
+            }
+        }
+    });
+
+    const Middle = React.createClass({
+        render(){
+            return (<div>
+                        {this.props.count.map((Text, Index) => {
+                            return <Item index={Index} text={Text}
+                                         deleted={this.props.deleted.bind(this)}/>
+                        })}
+                    </div>
+            )
+        }
+    });
+
+    const NewItem = React.createClass({
+        handelDelete(){
+            this.props.deleted(this.props.index);
+        },
+        render(){
+            if (this.props.text === 'text') {
+                return (
+
+                        <div className="input-group input-group-xs">
+                            <div className="col-lg-9">
+                                <input type="text" className="form-control"/>
+                            </div>
+                        </div>
+                )
+            } else {
+                return (<div className="input-group input-group-xs">
+                    <div className="col-lg-10">
+                        <input type="date" className="form-control"/>
+                    </div>
+                </div>)
+
+            }
+        }
+    });
+
+    const FormTools = React.createClass({
+        getInitialState(){
+            return {count: [], status: true}
+        },
+        handelClickedText(){
+            this.state.count.push('text');
+            this.setState({count: this.state.count})
+        },
+        handelClickedDate(){
+            this.state.count.push('date');
+            this.setState({count: this.state.count})
+        },
+        deleted(index){
+            this.state.count.splice(index, 1);
+            this.setState({count: this.state.count});
+        },
+        onClick(){
+            this.setState({status: !this.state.status});
+        },
+
+        render(){
+            if (this.state.status === true) {
+                return (
+                        <div>
+                            <form>
+                                <center>
+                                    <div id="center" className="btn-group" role="group">
+                                        <button type="button" onClick={this.onClick} className="btn btn-info btn-lg">
+                                            预览
+                                        </button>
+                                    </div>
+                                </center>
+                                <div className="right">
+                                    <div id="center" className="btn-group" role="group">
+                                        <button type="button" className="btn btn-default btn-lg"
+                                                onClick={this.handelClickedText}>文本框
+                                        </button>
+                                    </div>
+                                    <br/>
+                                    <div id="center" className="btn-group" role="group">
+                                        <button type="button" className="btn btn-default btn-lg"
+                                                onClick={this.handelClickedDate}>日期框
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <Middle count={this.state.count} deleted={this.deleted}/>
+                        </div>
+                )
+            }
+            else {
+                return <div>
+                    <form>
+                        <center>
+                            <div id="center" className="btn-group" role="group">
+                                <button type="button" onClick={this.onClick} className="btn btn-info btn-lg">编辑
+                                </button>
+                            </div>
+                        </center>
+                    </form>
+                    <br/>
+                    <br/>
+                        <div className="show">
+                            {
+                                this.state.count.map((Text, Index)=> {
+                                    return <NewItem index={Index} text={Text}/>;
+                                })
+                            }
+                        </div>
+                    <center>
+                        <div id="center" className="btn-group" role="group">
+                            <button type="button" className="btn btn-success btn-lg">提交
+                            </button>
+                        </div>
+                    </center>
+                </div>
+            }
+        }
+    });
+
+    ReactDOM.render(
+            <FormTools/>
+            , document.getElementById('nohappy'))
+</script>
+</body>
+</html>
